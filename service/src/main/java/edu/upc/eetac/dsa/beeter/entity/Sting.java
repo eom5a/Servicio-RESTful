@@ -1,5 +1,6 @@
 package edu.upc.eetac.dsa.beeter.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.glassfish.jersey.linking.InjectLinks;
 
 import javax.ws.rs.core.Link;
@@ -8,6 +9,7 @@ import java.util.List;
 /**
  * Created by Enric on 26/03/2016.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Sting {
     @InjectLinks({})
     private List<Link> links;
@@ -16,8 +18,8 @@ public class Sting {
     private String creator;
     private String subject;
     private String content;
-    private String creationTimestamp;
-    private String lastModified;
+    private long creationTimestamp;
+    private long lastModified;
 
     public List<Link> getLinks() {
         return links;
@@ -67,19 +69,19 @@ public class Sting {
         this.content = content;
     }
 
-    public String getCreationTimestamp() {
+    public long getCreationTimestamp() {
         return creationTimestamp;
     }
 
-    public void setCreationTimestamp(String creationTimestamp) {
+    public void setCreationTimestamp(long creationTimestamp) {
         this.creationTimestamp = creationTimestamp;
     }
 
-    public String getLastModified() {
+    public long getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(String lastModified) {
+    public void setLastModified(long lastModified) {
         this.lastModified = lastModified;
     }
 }
