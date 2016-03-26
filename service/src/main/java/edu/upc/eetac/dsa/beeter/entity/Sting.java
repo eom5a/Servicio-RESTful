@@ -16,8 +16,8 @@ public class Sting {
     private String creator;
     private String subject;
     private String content;
-    private String creationTimestamp;
-    private String lastModified;
+    private long creationTimestamp;
+    private long lastModified;
 
     public List<Link> getLinks() {
         return links;
@@ -67,19 +67,19 @@ public class Sting {
         this.content = content;
     }
 
-    public String getCreationTimestamp() {
+    public long getCreationTimestamp() {
         return creationTimestamp;
     }
 
-    public void setCreationTimestamp(String creationTimestamp) {
+    public void setCreationTimestamp(long creationTimestamp) {
         this.creationTimestamp = creationTimestamp;
     }
 
-    public String getLastModified() {
+    public long getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(String lastModified) {
+    public void setLastModified(long lastModified) {
         this.lastModified = lastModified;
     }
 }
