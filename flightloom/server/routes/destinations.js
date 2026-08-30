@@ -21,6 +21,10 @@ async function getCitiesByCode() {
 }
 
 router.get('/', async (req, res) => {
+  if (!config.travelpayoutsConfigured) {
+    return res.status(503).json({ error: 'El explorador de destinos aún no está configurado en este servidor.' });
+  }
+
   const { origin, currency = config.defaultCurrency } = req.query;
 
   if (!origin || !IATA_RE.test(origin)) {

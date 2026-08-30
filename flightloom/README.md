@@ -31,6 +31,8 @@ Proyecto independiente del backend "Beeter" del resto de este repositorio: no co
 
 6. Abre `http://localhost:3000` en el navegador.
 
+Si despliegas el sitio antes de tener el token/marker de Travelpayouts (por ejemplo, para verificar el dominio en otra plataforma), el servidor arranca igualmente: la web estática se sirve con normalidad y solo las rutas `/api/calendar`, `/api/cheapest-destinations` y `/api/search-link` devuelven un error 503 hasta que añadas esas dos variables de entorno.
+
 ## Estructura
 
 - `server/` — backend Express: proxy con caché delante de la API de Travelpayouts y construcción de enlaces de afiliado.

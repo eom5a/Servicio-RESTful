@@ -13,6 +13,10 @@ function daysInMonth(year, month) {
 }
 
 router.get('/', async (req, res) => {
+  if (!config.travelpayoutsConfigured) {
+    return res.status(503).json({ error: 'El calendario de precios aún no está configurado en este servidor.' });
+  }
+
   const { origin, destination = '', month, currency = config.defaultCurrency } = req.query;
 
   if (!origin || !IATA_RE.test(origin)) {

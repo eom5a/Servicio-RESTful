@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { config } from '../config.js';
 import { buildSearchLink } from '../affiliateLink.js';
 
 const router = Router();
@@ -6,6 +7,10 @@ const IATA_RE = /^[A-Za-z]{3}$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 router.get('/', (req, res) => {
+  if (!config.travelpayoutsConfigured) {
+    return res.status(503).json({ error: 'Los enlaces de reserva aún no están configurados en este servidor.' });
+  }
+
   const { origin, destination = '', depart_date: departDate, return_date: returnDate, adults = '1' } = req.query;
 
   if (!origin || !IATA_RE.test(origin)) {
