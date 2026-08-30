@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlightCalendar — Buscar vuelos</title>
+  <link rel="stylesheet" href="/css/tailwind.css" />
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <header id="app-header" class="bg-white shadow-sm sticky top-0 z-10"></header>
+
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <section class="text-center mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold text-slate-800 mb-2">Buscar vuelos</h1>
+      <p class="text-slate-500">Búsqueda tradicional con fechas fijas, para cuando ya sabes cuándo quieres volar.</p>
+    </section>
+
+    <form id="search-form" class="bg-white rounded-2xl shadow-sm p-5 grid gap-4 sm:grid-cols-2">
+      <div>
+        <label class="block text-sm font-medium text-slate-600 mb-1" for="origin">Origen</label>
+        <input id="origin" list="origin-list" required placeholder="MAD"
+               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+        <datalist id="origin-list"></datalist>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-600 mb-1" for="destination">Destino</label>
+        <input id="destination" list="destination-list" required placeholder="NRT"
+               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+        <datalist id="destination-list"></datalist>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-600 mb-1" for="depart-date">Fecha de ida</label>
+        <input id="depart-date" type="date" required
+               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-600 mb-1" for="return-date">
+          Fecha de vuelta <span class="text-slate-400 font-normal">(opcional)</span>
+        </label>
+        <input id="return-date" type="date"
+               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-600 mb-1" for="adults">Pasajeros</label>
+        <input id="adults" type="number" min="1" max="9" value="1"
+               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+      </div>
+      <div class="sm:col-span-2">
+        <button type="submit"
+                class="w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg px-4 py-2 transition-colors">
+          Buscar vuelos
+        </button>
+      </div>
+    </form>
+
+    <div id="search-status" class="text-sm text-slate-500 mt-4"></div>
+  </main>
+
+  <script type="module" src="/js/search.js"></script>
+</body>
+</html>

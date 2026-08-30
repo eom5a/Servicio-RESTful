@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+.day-cell {
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.day-cell:not(.day-cell--empty):not(.day-cell--unavailable):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}

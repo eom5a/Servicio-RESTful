@@ -1,0 +1,66 @@
+import { Router } from 'express';
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { config } from '../config.js';
+import { cacheGet, cacheSet } from '../cache.js';
+import { fetchCityDirections } from '../travelpayoutsClient.js';
+
+const router = Router();
+const IATA_RE = /^[A-Za-z]{3}$/;
+
+const citiesPath = fileURLToPath(new URL('../../public/data/iata-cities.json', import.meta.url));
+let citiesByCode = null;
+
+async function getCitiesByCode() {
+  if (!citiesByCode) {
+    const raw = await readFile(citiesPath, 'utf-8');
+    const list = JSON.parse(raw);
+    citiesByCode = new Map(list.map((c) => [c.code, c]));
+  }
+  return citiesByCode;
+}
+
+router.get('/', async (req, res) => {
+  const { origin, currency = config.defaultCurrency } = req.query;
+
+  if (!origin || !IATA_RE.test(origin)) {
+    return res.status(400).json({ error: 'Parámetro "origin" inválido o ausente (código IATA de 3 letras).' });
+  }
+
+  const originCode = origin.toUpperCase();
+  const cacheKey = `destinations:${originCode}:${currency}`;
+
+  const cached = cacheGet(cacheKey);
+  if (cached) {
+    return res.json(cached);
+  }
+
+  try {
+    const raw = await fetchCityDirections({ origin: originCode, currency });
+    const cities = await getCitiesByCode();
+
+    const destinations = Object.entries(raw)
+      .map(([code, info]) => {
+        const meta = cities.get(code);
+        return {
+          destination: code,
+          cityName: meta ? meta.city : code,
+          country: meta ? meta.country : null,
+          price: info.price,
+          departureAt: info.departure_at || null,
+          returnAt: info.return_at || null,
+        };
+      })
+      .filter((d) => typeof d.price === 'number')
+      .sort((a, b) => a.price - b.price);
+
+    const payload = { origin: originCode, currency, destinations };
+    cacheSet(cacheKey, payload, config.destinationsCacheTtl);
+    res.json(payload);
+  } catch (err) {
+    console.error('Error consultando destinos baratos de Travelpayouts:', err.message);
+    res.status(502).json({ error: 'No se pudo obtener la lista de destinos baratos.' });
+  }
+});
+
+export default router;
