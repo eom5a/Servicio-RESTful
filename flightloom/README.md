@@ -43,6 +43,16 @@ Si modificas las clases de Tailwind en el HTML/JS y quieres regenerar el CSS:
 npm run build:css
 ```
 
+## Despliegue (Render)
+
+El repositorio incluye `render.yaml` en la raíz para desplegar como Blueprint en [Render](https://render.com/):
+
+1. Crea una cuenta en Render y conecta este repositorio de GitHub.
+2. "New +" → "Blueprint" → selecciona el repo; Render detectará `render.yaml` automáticamente (usa la carpeta `flightloom/` como raíz del servicio).
+3. En el panel del servicio, rellena las variables de entorno marcadas como secretas: `TRAVELPAYOUTS_TOKEN` y `TRAVELPAYOUTS_MARKER`.
+4. Una vez desplegado, en "Settings" → "Custom Domain" añade `flightloom.es` y sigue las instrucciones de Render para apuntar el DNS del dominio (registro CNAME/A según indique) desde tu proveedor de dominios.
+5. Con el dominio apuntando y el sitio en producción, ya puedes verificar la propiedad del sitio en Impact.com (el meta tag ya está incluido en `public/index.html`).
+
 ## Alcance de esta primera versión
 
 No incluye (queda como trabajo futuro): cuentas de usuario, alertas de precio, selector de moneda dinámico, histórico propio de precios, autocompletado en vivo de ciudades, motor de reserva propio, apps móviles, tests automatizados ni dashboard de conversiones (para esto último, usa el panel de Travelpayouts).

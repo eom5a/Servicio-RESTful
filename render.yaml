@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: flightloom
+    runtime: node
+    rootDir: flightloom
+    plan: free
+    buildCommand: npm install && npm run build:css
+    startCommand: npm start
+    envVars:
+      - key: TRAVELPAYOUTS_TOKEN
+        sync: false
+      - key: TRAVELPAYOUTS_MARKER
+        sync: false
+      - key: DEFAULT_CURRENCY
+        value: EUR
+      - key: CALENDAR_CACHE_TTL
+        value: "21600"
+      - key: DESTINATIONS_CACHE_TTL
+        value: "43200"
