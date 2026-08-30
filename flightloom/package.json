@@ -1,7 +1,7 @@
 {
-  "name": "flight-calendar",
+  "name": "flightloom",
   "version": "1.0.0",
-  "description": "Calendario de vuelos baratos con fechas flexibles, explorador de destinos y buscador tradicional, con enlaces de reserva de afiliado (Travelpayouts/Aviasales).",
+  "description": "Flightloom: calendario de vuelos baratos con fechas flexibles, explorador de destinos y buscador tradicional, con enlaces de reserva de afiliado (Travelpayouts/Aviasales).",
   "type": "module",
   "main": "server/index.js",
   "scripts": {

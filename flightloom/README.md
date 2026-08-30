@@ -1,4 +1,4 @@
-# FlightCalendar
+# Flightloom
 
 Calendario de vuelos baratos con fechas flexibles: en vez de ir probando fecha a fecha, muestra de un vistazo qué días de un mes son más baratos para volar desde un origen (a un destino fijo o a cualquiera). También incluye un explorador de destinos baratos y un buscador tradicional por fechas fijas.
 

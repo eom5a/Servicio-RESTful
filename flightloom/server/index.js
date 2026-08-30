@@ -17,5 +17,5 @@ app.use('/api/search-link', searchLinkRoute);
 app.use(express.static(publicDir));
 
 app.listen(config.port, () => {
-  console.log(`flight-calendar escuchando en http://localhost:${config.port}`);
+  console.log(`Flightloom escuchando en http://localhost:${config.port}`);
 });

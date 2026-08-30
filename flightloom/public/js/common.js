@@ -12,7 +12,7 @@ export function renderNav(activeHref) {
 
   header.innerHTML = `
     <div class="max-w-5xl mx-auto flex items-center justify-between px-4 py-4">
-      <a href="/index.html" class="text-xl font-bold text-sky-600">✈️ FlightCalendar</a>
+      <a href="/index.html" class="text-xl font-bold text-sky-600">✈️ Flightloom</a>
       <nav class="flex gap-1 sm:gap-2">
         ${NAV_ITEMS.map(
           (item) => `
@@ -49,7 +49,7 @@ export function populateDatalist(datalistId, cities) {
 
 export function getSavedOrigin() {
   try {
-    return localStorage.getItem('flightcalendar:origin') || '';
+    return localStorage.getItem('flightloom:origin') || '';
   } catch {
     return '';
   }
@@ -57,7 +57,7 @@ export function getSavedOrigin() {
 
 export function saveOrigin(code) {
   try {
-    localStorage.setItem('flightcalendar:origin', code.toUpperCase());
+    localStorage.setItem('flightloom:origin', code.toUpperCase());
   } catch {
     // localStorage no disponible; no es crítico, simplemente no se recuerda el origen.
   }
