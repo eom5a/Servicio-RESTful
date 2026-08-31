@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      # Absolute paths so the sqlite file and uploads live entirely inside the
+      # mounted volume, independent of prisma/ or storage/ inside the image.
+      DATABASE_URL: "file:/data/dev.db"
+      UPLOADS_DIR: "/data/uploads"
+    volumes:
+      - nutrition_data:/data
+    restart: unless-stopped
+
+volumes:
+  nutrition_data:

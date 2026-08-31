@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f8f7;
+  --foreground: #171b19;
+  --card: #ffffff;
+  --card-foreground: #171b19;
+  --border: #e4e7e4;
+  --muted: #eef1ee;
+  --muted-foreground: #5c655f;
+  --primary: #0f9d78;
+  --primary-foreground: #ffffff;
+  --accent: #eafaf3;
+  --accent-foreground: #0f9d78;
+  --destructive: #d64545;
+  --destructive-foreground: #ffffff;
+  --warning: #b5760a;
+  --warning-foreground: #ffffff;
+  --ring: #0f9d78;
+  --radius: 0.75rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 0.35rem);
+  --radius-md: calc(var(--radius) - 0.2rem);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.3rem);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #10130f;
+    --foreground: #edf1ee;
+    --card: #171b18;
+    --card-foreground: #edf1ee;
+    --border: #262c26;
+    --muted: #1c211d;
+    --muted-foreground: #97a199;
+    --primary: #22c08e;
+    --primary-foreground: #06140e;
+    --accent: #16241d;
+    --accent-foreground: #34d399;
+    --ring: #22c08e;
+  }
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}

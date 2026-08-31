@@ -1,0 +1,140 @@
+// Prisma schema for the personal nutrition/fitness tracker.
+// Every model carries userId even though only one User row exists today —
+// this is the seam for a future multi-tenant version of the app.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String?  @unique
+  name      String?
+  createdAt DateTime @default(now())
+
+  bodyMetrics      BodyMetricEntry[]
+  meals            MealEntry[]
+  exerciseEntries  ExerciseEntry[]
+  workoutSessions  WorkoutSession[]
+  nutritionTargets NutritionTarget[]
+  coachNotes       DailyCoachNote[]
+}
+
+model BodyMetricEntry {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  recordedAt     DateTime @default(now())
+  weightKg       Float
+  bodyFatPercent Float?
+  muscleMassKg   Float?
+  waterPercent   Float?
+  visceralFat    Float?
+  boneMassKg     Float?
+  bmr            Int?
+  sourceImageUrl String?
+  rawAiResponse  String?
+  aiConfidence   Float?
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  @@index([userId, recordedAt])
+}
+
+model MealEntry {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  eatenAt       DateTime @default(now())
+  mealType      String?
+  description   String?
+  calories      Int
+  proteinG      Float
+  carbsG        Float
+  fatG          Float
+  fiberG        Float?
+  photoUrl      String?
+  rawAiResponse String?
+  aiConfidence  Float?
+  isEdited      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@index([userId, eatenAt])
+}
+
+model ExerciseEntry {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  performedAt    DateTime @default(now())
+  type           String
+  durationMin    Int?
+  caloriesBurned Int?
+  rawReportText  String?
+  rawAiResponse  String?
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  @@index([userId, performedAt])
+}
+
+model WorkoutSession {
+  id        String       @id @default(cuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  date      DateTime     @default(now())
+  notes     String?
+  sets      WorkoutSet[]
+  createdAt DateTime     @default(now())
+
+  @@index([userId, date])
+}
+
+model WorkoutSet {
+  id           String         @id @default(cuid())
+  sessionId    String
+  session      WorkoutSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exerciseName String
+  setNumber    Int
+  weightKg     Float?
+  reps         Int?
+  rpe          Float?
+  notes        String?
+
+  @@index([exerciseName])
+}
+
+model NutritionTarget {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  effectiveFrom  DateTime @default(now())
+  caloriesTarget Int
+  proteinTargetG Float
+  carbsTargetG   Float
+  fatTargetG     Float
+  goalBodyFatPct Float?
+  goalWeightKg   Float?
+  active         Boolean  @default(true)
+
+  @@index([userId, active])
+}
+
+model DailyCoachNote {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  date          DateTime @default(now())
+  summary       String
+  highlights    String?
+  rawAiResponse String?
+  createdAt     DateTime @default(now())
+
+  @@index([userId, date])
+}
