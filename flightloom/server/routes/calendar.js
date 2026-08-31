@@ -69,26 +69,33 @@ router.get('/', async (req, res) => {
 
   try {
     const [year, monthNum] = month.split('-').map(Number);
-
-    const [rawEntries, destinationsByDate] = await Promise.all([
-      fetchMonthMatrix({ origin: originCode, destination: destinationCode, month: `${month}-01`, currency }),
-      destinationCode ? Promise.resolve(new Map()) : buildDestinationsByDate(originCode, month, currency),
-    ]);
-
-    const priceByDate = new Map();
-    for (const entry of rawEntries) {
-      if (entry.depart_date && typeof entry.value === 'number') {
-        priceByDate.set(entry.depart_date, entry.value);
-      }
-    }
-
     const totalDays = daysInMonth(year, monthNum);
     const days = [];
-    for (let day = 1; day <= totalDays; day += 1) {
-      const date = `${month}-${String(day).padStart(2, '0')}`;
-      const price = priceByDate.get(date);
-      const topDestination = destinationsByDate.get(date) || null;
-      days.push({ date, price: price ?? null, found: price !== undefined, topDestination });
+
+    if (destinationCode) {
+      // Ruta fija: precio por día para ese origen/destino concreto.
+      const rawEntries = await fetchMonthMatrix({ origin: originCode, destination: destinationCode, month: `${month}-01`, currency });
+      const priceByDate = new Map();
+      for (const entry of rawEntries) {
+        if (entry.depart_date && typeof entry.value === 'number') {
+          priceByDate.set(entry.depart_date, entry.value);
+        }
+      }
+      for (let day = 1; day <= totalDays; day += 1) {
+        const date = `${month}-${String(day).padStart(2, '0')}`;
+        const price = priceByDate.get(date);
+        days.push({ date, price: price ?? null, found: price !== undefined, topDestination: null });
+      }
+    } else {
+      // "Cualquier destino": el endpoint de calendario por ruta no admite destino vacío,
+      // así que construimos el calendario directamente a partir de los destinos más
+      // baratos encontrados desde el origen (mismos datos que el explorador).
+      const destinationsByDate = await buildDestinationsByDate(originCode, month, currency);
+      for (let day = 1; day <= totalDays; day += 1) {
+        const date = `${month}-${String(day).padStart(2, '0')}`;
+        const topDestination = destinationsByDate.get(date) || null;
+        days.push({ date, price: topDestination?.price ?? null, found: Boolean(topDestination), topDestination });
+      }
     }
 
     const payload = { origin: originCode, destination: destinationCode || null, month, currency, days };
