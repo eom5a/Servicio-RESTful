@@ -17,18 +17,18 @@ export function renderNav(activeHref) {
   const currentPath = window.location.pathname === '/' ? '/index.html' : window.location.pathname;
 
   header.innerHTML = `
-    <div class="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
-      <a href="/index.html" class="flex items-center gap-2 group">
-        <span class="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-400 text-white shadow-sm group-hover:scale-105 transition-transform">
+    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3">
+      <a href="/index.html" class="flex items-center gap-2 group shrink-0">
+        <span class="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-400 text-white shadow-sm group-hover:scale-105 transition-transform shrink-0">
           ${LOGO_ICON}
         </span>
-        <span class="text-lg font-extrabold tracking-tight text-slate-800">Flightloom</span>
+        <span class="text-lg font-extrabold tracking-tight text-slate-800 whitespace-nowrap">Flightloom</span>
       </a>
-      <nav class="flex gap-1 sm:gap-1.5">
+      <nav class="flex gap-1 sm:gap-1.5 w-full sm:w-auto justify-center sm:justify-end overflow-x-auto">
         ${NAV_ITEMS.map(
           (item) => `
           <a href="${item.href}"
-             class="px-3 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors ${
+             class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap shrink-0 ${
                (activeHref || currentPath) === item.href
                  ? 'bg-slate-900 text-white shadow-sm'
                  : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
@@ -90,11 +90,13 @@ export function saveOrigin(code) {
 }
 
 export function extractIataCode(inputValue) {
-  const match = inputValue.match(/\(([A-Za-z]{3})\)\s*$/);
+  const trimmed = inputValue.trim();
+  const match = trimmed.match(/\(([A-Za-z]{3})\)\s*$/);
   if (match) return match[1].toUpperCase();
-  return inputValue.trim().slice(0, 3).toUpperCase();
+  if (/^[A-Za-z]{3}$/.test(trimmed)) return trimmed.toUpperCase();
+  return '';
 }
 
 export function showError(container, message) {
-  container.innerHTML = `<div class="rounded-xl bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm">${message}</div>`;
+  container.innerHTML = `<div class="col-span-full rounded-xl bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm">${message}</div>`;
 }
