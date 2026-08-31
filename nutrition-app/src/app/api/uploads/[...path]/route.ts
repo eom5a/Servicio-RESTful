@@ -10,10 +10,10 @@ export async function GET(_request: Request, ctx: RouteContext<"/api/uploads/[..
   }
 
   const { path: segments } = await ctx.params;
-  const filename = segments[segments.length - 1];
+  const pathname = segments.join("/");
 
   try {
-    const buffer = await readUploadedFile(filename);
+    const buffer = await readUploadedFile(pathname);
     return new NextResponse(new Uint8Array(buffer), {
       headers: { "Content-Type": "image/jpeg", "Cache-Control": "private, max-age=31536000" },
     });

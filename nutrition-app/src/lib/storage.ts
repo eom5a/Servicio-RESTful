@@ -1,26 +1,23 @@
 import "server-only";
 import { randomUUID } from "crypto";
-import path from "path";
-import { mkdir, readFile, writeFile } from "fs/promises";
-
-const UPLOADS_DIR = path.resolve(
-  /* turbopackIgnore: true */ process.cwd(),
-  process.env.UPLOADS_DIR ?? "./storage/uploads",
-);
+import { put, get } from "@vercel/blob";
 
 /**
- * Saves a processed image buffer to local disk and returns the URL to fetch it back
- * (served through /api/uploads/[...path], which is auth-gated).
- * Swap this implementation for S3/R2 later without touching callers.
+ * Saves a processed image buffer to Vercel Blob (private — not reachable by public URL)
+ * and returns the URL to fetch it back through /api/uploads/[...path], which is auth-gated.
  */
 export async function saveUploadedImage(buffer: Buffer, extension = "jpg") {
-  await mkdir(UPLOADS_DIR, { recursive: true });
-  const filename = `${randomUUID()}.${extension}`;
-  await writeFile(path.join(/* turbopackIgnore: true */ UPLOADS_DIR, filename), buffer);
-  return `/api/uploads/${filename}`;
+  const blob = await put(`${randomUUID()}.${extension}`, buffer, {
+    access: "private",
+    contentType: extension === "jpg" ? "image/jpeg" : `image/${extension}`,
+  });
+  return `/api/uploads/${blob.pathname}`;
 }
 
-export async function readUploadedFile(filename: string) {
-  const safeName = path.basename(filename);
-  return readFile(path.join(/* turbopackIgnore: true */ UPLOADS_DIR, safeName));
+export async function readUploadedFile(pathname: string) {
+  const result = await get(pathname, { access: "private" });
+  if (!result || !result.stream) {
+    throw new Error("Not found");
+  }
+  return Buffer.from(await new Response(result.stream).arrayBuffer());
 }
