@@ -4,6 +4,12 @@ const NAV_ITEMS = [
   { href: '/search.html', label: 'Buscar vuelos' },
 ];
 
+const LOGO_ICON = `
+  <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+    <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-3 2v1.5l4.5-1.5 4.5 1.5V21l-3-2v-5.5l8 2.5Z"/>
+  </svg>
+`;
+
 export function renderNav(activeHref) {
   const header = document.getElementById('app-header');
   if (!header) return;
@@ -11,21 +17,41 @@ export function renderNav(activeHref) {
   const currentPath = window.location.pathname === '/' ? '/index.html' : window.location.pathname;
 
   header.innerHTML = `
-    <div class="max-w-5xl mx-auto flex items-center justify-between px-4 py-4">
-      <a href="/index.html" class="text-xl font-bold text-sky-600">✈️ Flightloom</a>
-      <nav class="flex gap-1 sm:gap-2">
+    <div class="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
+      <a href="/index.html" class="flex items-center gap-2 group">
+        <span class="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-400 text-white shadow-sm group-hover:scale-105 transition-transform">
+          ${LOGO_ICON}
+        </span>
+        <span class="text-lg font-extrabold tracking-tight text-slate-800">Flightloom</span>
+      </a>
+      <nav class="flex gap-1 sm:gap-1.5">
         ${NAV_ITEMS.map(
           (item) => `
           <a href="${item.href}"
-             class="px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+             class="px-3 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors ${
                (activeHref || currentPath) === item.href
-                 ? 'bg-sky-600 text-white'
-                 : 'text-slate-600 hover:bg-sky-50 hover:text-sky-600'
+                 ? 'bg-slate-900 text-white shadow-sm'
+                 : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
              }">
             ${item.label}
           </a>`
         ).join('')}
       </nav>
+    </div>
+  `;
+}
+
+export function renderFooter() {
+  const footer = document.getElementById('app-footer');
+  if (!footer) return;
+
+  footer.innerHTML = `
+    <div class="max-w-5xl mx-auto px-4 py-8 text-center">
+      <p class="text-xs text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        Los precios mostrados son orientativos y pueden variar. Flightloom puede recibir una comisión
+        por las reservas realizadas a través de los enlaces de este sitio, sin coste adicional para ti.
+      </p>
+      <p class="text-xs text-slate-300 mt-2">© ${new Date().getFullYear()} Flightloom</p>
     </div>
   `;
 }
@@ -70,5 +96,5 @@ export function extractIataCode(inputValue) {
 }
 
 export function showError(container, message) {
-  container.innerHTML = `<div class="rounded-lg bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm">${message}</div>`;
+  container.innerHTML = `<div class="rounded-xl bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm">${message}</div>`;
 }

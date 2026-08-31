@@ -1,7 +1,8 @@
 import { getCalendar, getSearchLink } from './api.js';
-import { renderNav, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError } from './common.js';
+import { renderNav, renderFooter, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError } from './common.js';
 
 renderNav('/index.html');
+renderFooter();
 
 const form = document.getElementById('calendar-form');
 const originInput = document.getElementById('origin');
@@ -75,15 +76,15 @@ function renderGrid(data) {
     const cell = document.createElement('div');
     const dayNum = Number(day.date.split('-')[2]);
     if (day.found) {
-      cell.className = 'day-cell rounded-lg p-2 sm:p-3 cursor-pointer text-center';
+      cell.className = 'day-cell rounded-xl p-2 sm:p-3 cursor-pointer text-center border border-black/5 shadow-sm';
       cell.style.backgroundColor = priceToColor(day.price, min, max);
       cell.innerHTML = `
-        <div class="text-sm font-semibold text-slate-700">${dayNum}</div>
-        <div class="text-xs text-slate-600">${Math.round(day.price)} ${data.currency}</div>
+        <div class="text-sm font-bold text-slate-800">${dayNum}</div>
+        <div class="text-xs sm:text-sm font-semibold text-slate-700">${Math.round(day.price)} ${data.currency}</div>
       `;
       cell.addEventListener('click', () => openBookingLink(day.date));
     } else {
-      cell.className = 'day-cell day-cell--unavailable rounded-lg p-2 sm:p-3 text-center bg-slate-100 text-slate-300';
+      cell.className = 'day-cell day-cell--unavailable rounded-xl p-2 sm:p-3 text-center bg-slate-100 text-slate-300';
       cell.innerHTML = `<div class="text-sm">${dayNum}</div><div class="text-xs">—</div>`;
     }
     grid.appendChild(cell);

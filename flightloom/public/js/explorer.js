@@ -1,7 +1,10 @@
 import { getCheapestDestinations, getSearchLink } from './api.js';
-import { renderNav, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError } from './common.js';
+import { renderNav, renderFooter, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError } from './common.js';
 
 renderNav('/explorer.html');
+renderFooter();
+
+const ACCENT_COLORS = ['from-sky-500 to-cyan-400', 'from-fuchsia-500 to-violet-400', 'from-amber-500 to-orange-400', 'from-emerald-500 to-teal-400'];
 
 const form = document.getElementById('explorer-form');
 const originInput = document.getElementById('origin');
@@ -34,17 +37,22 @@ function renderResults(data) {
   }
 
   results.innerHTML = '';
-  data.destinations.forEach((dest) => {
+  data.destinations.forEach((dest, i) => {
+    const accent = ACCENT_COLORS[i % ACCENT_COLORS.length];
     const card = document.createElement('div');
-    card.className = 'bg-white rounded-2xl shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow';
+    card.className = 'dest-card bg-white rounded-2xl shadow-sm border border-slate-100 p-4 cursor-pointer';
     card.innerHTML = `
-      <div class="flex items-center justify-between mb-1">
-        <h3 class="font-semibold text-slate-800">${dest.cityName}</h3>
-        <span class="text-xs text-slate-400">${dest.destination}</span>
+      <div class="flex items-center gap-3 mb-3">
+        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br ${accent} text-white font-bold text-sm shrink-0">
+          ${dest.destination.slice(0, 2)}
+        </span>
+        <div class="min-w-0">
+          <h3 class="font-bold text-slate-800 truncate">${dest.cityName}</h3>
+          <p class="text-xs text-slate-400 truncate">${dest.country || ''} · ${dest.destination}</p>
+        </div>
       </div>
-      <p class="text-sm text-slate-500 mb-2">${dest.country || ''}</p>
       <div class="flex items-end justify-between">
-        <span class="text-2xl font-bold text-sky-600">${Math.round(dest.price)} ${data.currency}</span>
+        <span class="text-2xl font-extrabold text-slate-900">${Math.round(dest.price)} <span class="text-sm font-semibold text-slate-500">${data.currency}</span></span>
         ${dest.departureAt ? `<span class="text-xs text-slate-400">${toDateOnly(dest.departureAt)}</span>` : ''}
       </div>
     `;

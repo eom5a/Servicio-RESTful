@@ -5,22 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Flightloom — Calendario de vuelos baratos</title>
   <meta name="impact-site-verification" value="ed1825ec-2f83-42dd-9ed4-292de358c1e4">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/tailwind.css" />
 </head>
 <body class="bg-slate-50 min-h-screen">
-  <header id="app-header" class="bg-white shadow-sm sticky top-0 z-10"></header>
+  <header id="app-header" class="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-20"></header>
 
-  <main class="max-w-5xl mx-auto px-4 py-8">
-    <section class="text-center mb-8">
-      <h1 class="text-3xl sm:text-4xl font-bold text-slate-800 mb-2">
+  <section class="relative overflow-hidden bg-gradient-to-br from-sky-600 via-sky-500 to-cyan-400 text-white">
+    <svg class="absolute inset-0 w-full h-full opacity-20 pointer-events-none" preserveAspectRatio="none" viewBox="0 0 800 300" fill="none">
+      <path d="M-20 240 C 200 90, 420 300, 820 40" stroke="white" stroke-width="2" stroke-dasharray="7 11" />
+    </svg>
+    <div class="max-w-5xl mx-auto px-4 pt-14 pb-24 sm:pt-20 sm:pb-28 text-center relative">
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">
         Encuentra el día más barato para volar
       </h1>
-      <p class="text-slate-500">
+      <p class="text-white/90 text-base sm:text-lg max-w-2xl mx-auto">
         Elige un origen y un mes: verás de un vistazo qué días son más baratos, sin ir probando fecha a fecha.
       </p>
-    </section>
+    </div>
+  </section>
 
-    <form id="calendar-form" class="bg-white rounded-2xl shadow-sm p-5 mb-8 grid gap-4 sm:grid-cols-4">
+  <main class="max-w-5xl mx-auto px-4 -mt-16 sm:-mt-20 pb-10 relative z-10">
+    <form id="calendar-form" class="bg-white rounded-2xl shadow-xl shadow-slate-900/10 p-5 mb-8 grid gap-4 sm:grid-cols-4">
       <div class="sm:col-span-1">
         <label class="block text-sm font-medium text-slate-600 mb-1" for="origin">Origen</label>
         <input id="origin" list="origin-list" required placeholder="MAD"
@@ -42,31 +50,35 @@
       </div>
       <div class="sm:col-span-1 flex items-end">
         <button type="submit"
-                class="w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg px-4 py-2 transition-colors">
+                class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold rounded-lg px-4 py-2 transition-colors shadow-sm">
           Ver calendario
         </button>
       </div>
     </form>
 
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center justify-between mb-3">
       <button id="prev-month" type="button"
-              class="px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-600 hover:bg-slate-100 disabled:opacity-40" disabled>
+              class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 disabled:opacity-40 shadow-sm" disabled>
         ← Mes anterior
       </button>
-      <h2 id="month-label" class="font-semibold text-slate-700"></h2>
+      <h2 id="month-label" class="font-bold text-slate-800 text-lg"></h2>
       <button id="next-month" type="button"
-              class="px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-600 hover:bg-slate-100 disabled:opacity-40" disabled>
+              class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 disabled:opacity-40 shadow-sm" disabled>
         Mes siguiente →
       </button>
     </div>
 
-    <div id="calendar-status" class="text-sm text-slate-500 mb-3"></div>
-    <div id="calendar-grid" class="grid grid-cols-7 gap-1.5 sm:gap-2"></div>
+    <div class="flex items-center justify-center gap-4 text-xs text-slate-500 mb-4">
+      <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:hsl(120,65%,55%)"></span>Barato</span>
+      <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:hsl(50,80%,55%)"></span>Medio</span>
+      <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:hsl(0,70%,55%)"></span>Caro</span>
+    </div>
 
-    <p class="text-xs text-slate-400 mt-6 text-center">
-      Precios orientativos agregados por Travelpayouts. Al hacer clic en un día se abre la búsqueda real en Aviasales.
-    </p>
+    <div id="calendar-status" class="text-sm text-slate-500 mb-3 text-center"></div>
+    <div id="calendar-grid" class="grid grid-cols-7 gap-1.5 sm:gap-2"></div>
   </main>
+
+  <footer id="app-footer"></footer>
 
   <script type="module" src="/js/calendar.js"></script>
 </body>

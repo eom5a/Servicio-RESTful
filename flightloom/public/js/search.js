@@ -1,7 +1,8 @@
 import { getSearchLink } from './api.js';
-import { renderNav, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError } from './common.js';
+import { renderNav, renderFooter, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError } from './common.js';
 
 renderNav('/search.html');
+renderFooter();
 
 const form = document.getElementById('search-form');
 const originInput = document.getElementById('origin');
