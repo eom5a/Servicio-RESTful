@@ -65,12 +65,113 @@ export function loadCities() {
   return citiesPromise;
 }
 
-export function populateDatalist(datalistId, cities) {
-  const datalist = document.getElementById(datalistId);
-  if (!datalist) return;
-  datalist.innerHTML = cities
-    .map((c) => `<option value="${c.code}">${c.city}, ${c.country} (${c.code})</option>`)
-    .join('');
+/**
+ * Autocompletado propio (no usa <datalist>: su soporte en Safari de iOS es
+ * muy poco fiable y en muchos casos no muestra ninguna sugerencia). Crea un
+ * desplegable posicionado bajo el input; el input debe estar dentro de un
+ * contenedor con "position: relative".
+ */
+export function attachAutocomplete(input, cities) {
+  const wrapper = input.parentElement;
+  const list = document.createElement('div');
+  list.className =
+    'hidden absolute left-0 right-0 top-full mt-1 z-30 bg-white rounded-lg shadow-lg border border-slate-200 max-h-60 overflow-y-auto';
+  wrapper.appendChild(list);
+
+  let matches = [];
+  let activeIndex = -1;
+
+  function formatOption(c) {
+    return `${c.city}, ${c.country} (${c.code})`;
+  }
+
+  function highlight() {
+    [...list.children].forEach((el, i) => {
+      el.classList.toggle('bg-sky-50', i === activeIndex);
+    });
+  }
+
+  function close() {
+    list.classList.add('hidden');
+    list.innerHTML = '';
+    matches = [];
+    activeIndex = -1;
+  }
+
+  function select(city) {
+    input.value = formatOption(city);
+    close();
+    input.dispatchEvent(new Event('change'));
+  }
+
+  function renderMatches() {
+    const query = input.value.trim().toLowerCase();
+    if (!query) {
+      close();
+      return;
+    }
+    matches = cities
+      .filter(
+        (c) =>
+          c.city.toLowerCase().includes(query) ||
+          c.country.toLowerCase().includes(query) ||
+          c.code.toLowerCase() === query
+      )
+      .slice(0, 8);
+    activeIndex = -1;
+
+    if (!matches.length) {
+      close();
+      return;
+    }
+
+    list.innerHTML = matches
+      .map(
+        (c, i) => `
+        <button type="button" data-index="${i}" class="w-full text-left px-3 py-2 text-sm flex items-center justify-between hover:bg-sky-50">
+          <span class="text-slate-700">${c.city}, ${c.country}</span>
+          <span class="text-slate-400 text-xs shrink-0 ml-2">${c.code}</span>
+        </button>`
+      )
+      .join('');
+    list.classList.remove('hidden');
+  }
+
+  input.addEventListener('input', renderMatches);
+  input.addEventListener('focus', () => {
+    if (input.value.trim()) renderMatches();
+  });
+
+  list.addEventListener('mousedown', (e) => {
+    const btn = e.target.closest('button[data-index]');
+    if (!btn) return;
+    e.preventDefault();
+    select(matches[Number(btn.dataset.index)]);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (list.classList.contains('hidden')) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, matches.length - 1);
+      highlight();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+      highlight();
+    } else if (e.key === 'Enter') {
+      if (activeIndex >= 0) {
+        e.preventDefault();
+        select(matches[activeIndex]);
+      }
+    } else if (e.key === 'Escape') {
+      close();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!wrapper.contains(e.target)) close();
+  });
 }
 
 export function getSavedOrigin() {

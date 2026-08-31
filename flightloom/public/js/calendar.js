@@ -1,5 +1,5 @@
 import { getCalendar, getSearchLink } from './api.js';
-import { renderNav, renderFooter, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError, renderAltLinks } from './common.js';
+import { renderNav, renderFooter, loadCities, attachAutocomplete, getSavedOrigin, saveOrigin, extractIataCode, showError, renderAltLinks } from './common.js';
 
 renderNav('/index.html');
 renderFooter();
@@ -150,8 +150,8 @@ nextBtn.addEventListener('click', () => {
 
 (async function init() {
   const cities = await loadCities();
-  populateDatalist('origin-list', cities);
-  populateDatalist('destination-list', cities);
+  attachAutocomplete(originInput, cities);
+  attachAutocomplete(destinationInput, cities);
 
   originInput.value = getSavedOrigin();
   monthInput.value = defaultMonth();

@@ -1,5 +1,5 @@
 import { getCheapestDestinations, getSearchLink } from './api.js';
-import { renderNav, renderFooter, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError, renderAltLinks } from './common.js';
+import { renderNav, renderFooter, loadCities, attachAutocomplete, getSavedOrigin, saveOrigin, extractIataCode, showError, renderAltLinks } from './common.js';
 
 renderNav('/explorer.html');
 renderFooter();
@@ -90,7 +90,7 @@ form.addEventListener('submit', (e) => {
 
 (async function init() {
   const cities = await loadCities();
-  populateDatalist('origin-list', cities);
+  attachAutocomplete(originInput, cities);
   originInput.value = getSavedOrigin();
   if (originInput.value) {
     loadDestinations();

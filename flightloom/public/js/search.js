@@ -1,5 +1,5 @@
 import { getSearchLink } from './api.js';
-import { renderNav, renderFooter, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError, renderAltLinks } from './common.js';
+import { renderNav, renderFooter, loadCities, attachAutocomplete, getSavedOrigin, saveOrigin, extractIataCode, showError, renderAltLinks } from './common.js';
 
 renderNav('/search.html');
 renderFooter();
@@ -38,8 +38,8 @@ form.addEventListener('submit', async (e) => {
 
 (async function init() {
   const cities = await loadCities();
-  populateDatalist('origin-list', cities);
-  populateDatalist('destination-list', cities);
+  attachAutocomplete(originInput, cities);
+  attachAutocomplete(destinationInput, cities);
   originInput.value = getSavedOrigin();
 
   const d = new Date();

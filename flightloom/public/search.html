@@ -28,15 +28,17 @@
     <form id="search-form" class="bg-white rounded-2xl shadow-xl shadow-slate-900/10 p-5 grid gap-4 sm:grid-cols-2">
       <div>
         <label class="block text-sm font-medium text-slate-600 mb-1" for="origin">Origen</label>
-        <input id="origin" list="origin-list" required placeholder="MAD"
-               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500" />
-        <datalist id="origin-list"></datalist>
+        <div class="relative">
+          <input id="origin" autocomplete="off" required placeholder="MAD"
+                 class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+        </div>
       </div>
       <div>
         <label class="block text-sm font-medium text-slate-600 mb-1" for="destination">Destino</label>
-        <input id="destination" list="destination-list" required placeholder="NRT"
-               class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500" />
-        <datalist id="destination-list"></datalist>
+        <div class="relative">
+          <input id="destination" autocomplete="off" required placeholder="NRT"
+                 class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+        </div>
       </div>
       <div>
         <label class="block text-sm font-medium text-slate-600 mb-1" for="depart-date">Fecha de ida</label>
