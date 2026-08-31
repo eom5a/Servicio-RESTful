@@ -100,3 +100,64 @@ export function extractIataCode(inputValue) {
 export function showError(container, message) {
   container.innerHTML = `<div class="col-span-full rounded-xl bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm">${message}</div>`;
 }
+
+export function addDays(dateStr, days) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const date = new Date(y, m - 1, d + days);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+async function fetchLink(path, params) {
+  const url = new URL(path, window.location.origin);
+  for (const [key, value] of Object.entries(params)) {
+    if (value) url.searchParams.set(key, value);
+  }
+  const response = await fetch(url);
+  if (!response.ok) return null;
+  const { url: link } = await response.json();
+  return link;
+}
+
+/**
+ * Muestra enlaces secundarios (Skyscanner, hoteles) tras un clic de reserva,
+ * sin bloquear la apertura del enlace de afiliado principal. Los que no
+ * apliquen (o no estén configurados en el servidor) simplemente no aparecen.
+ */
+export async function renderAltLinks(container, { origin, destination, departDate, returnDate, cityName }) {
+  if (!container) return;
+  container.innerHTML = '';
+  const links = [];
+
+  if (origin && destination && departDate) {
+    const url = await fetchLink('/api/skyscanner-link', {
+      origin,
+      destination,
+      depart_date: departDate,
+      return_date: returnDate,
+    });
+    if (url) links.push({ label: '🔎 Comparar en Skyscanner', url });
+  }
+
+  if (cityName) {
+    const url = await fetchLink('/api/hotel-link', {
+      city: cityName,
+      checkin: departDate,
+      checkout: returnDate || (departDate ? addDays(departDate, 3) : undefined),
+    });
+    if (url) links.push({ label: `🏨 Hoteles en ${cityName}`, url });
+  }
+
+  if (!links.length) return;
+
+  container.innerHTML = `
+    <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm">
+      <span class="text-slate-400">También puedes:</span>
+      ${links
+        .map(
+          (l) =>
+            `<a href="${l.url}" target="_blank" rel="noopener" class="text-sky-600 hover:text-sky-700 font-semibold underline underline-offset-2">${l.label}</a>`
+        )
+        .join('')}
+    </div>
+  `;
+}

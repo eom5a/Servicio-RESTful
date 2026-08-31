@@ -33,6 +33,12 @@ Proyecto independiente del backend "Beeter" del resto de este repositorio: no co
 
 Si despliegas el sitio antes de tener el token/marker de Travelpayouts (por ejemplo, para verificar el dominio en otra plataforma), el servidor arranca igualmente: la web estática se sirve con normalidad y solo las rutas `/api/calendar`, `/api/cheapest-destinations` y `/api/search-link` devuelven un error 503 hasta que añadas esas dos variables de entorno.
 
+## Otras integraciones (opcionales)
+
+- **Skyscanner**: el calendario y las tarjetas de destino incluyen un enlace "Comparar en Skyscanner". No necesita configuración — es la URL pública de resultados, sin comisión hasta que se apruebe un programa de afiliados propio con Skyscanner.
+- **Booking.com (hoteles)**: al reservar un vuelo aparece un enlace "Hoteles en {ciudad}" si has configurado `BOOKING_AID` en el `.env` (regístrate en [partnerships.booking.com](https://partnerships.booking.com/)). Si no lo configuras, ese enlace simplemente no aparece.
+- **Kiwi.com**: evaluado y descartado por ahora — desde 2024 su API Tequila es solo por invitación para nuevos partners, y sus enlaces de afiliado vía Travelpayouts requieren que el sitio ya tenga un mínimo de tráfico mensual.
+
 ## Estructura
 
 - `server/` — backend Express: proxy con caché delante de la API de Travelpayouts y construcción de enlaces de afiliado.

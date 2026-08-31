@@ -1,24 +1,11 @@
 import { Router } from 'express';
-import { readFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
 import { config } from '../config.js';
 import { cacheGet, cacheSet } from '../cache.js';
 import { fetchCityDirections } from '../travelpayoutsClient.js';
+import { getCitiesByCode } from '../cityLookup.js';
 
 const router = Router();
 const IATA_RE = /^[A-Za-z]{3}$/;
-
-const citiesPath = fileURLToPath(new URL('../../public/data/iata-cities.json', import.meta.url));
-let citiesByCode = null;
-
-async function getCitiesByCode() {
-  if (!citiesByCode) {
-    const raw = await readFile(citiesPath, 'utf-8');
-    const list = JSON.parse(raw);
-    citiesByCode = new Map(list.map((c) => [c.code, c]));
-  }
-  return citiesByCode;
-}
 
 router.get('/', async (req, res) => {
   if (!config.travelpayoutsConfigured) {
@@ -50,6 +37,7 @@ router.get('/', async (req, res) => {
           destination: code,
           cityName: meta ? meta.city : code,
           country: meta ? meta.country : null,
+          flag: meta ? meta.flag : '🌍',
           price: info.price,
           departureAt: info.departure_at || null,
           returnAt: info.return_at || null,

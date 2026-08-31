@@ -20,6 +20,7 @@ export const config = {
   travelpayoutsToken,
   travelpayoutsMarker,
   travelpayoutsConfigured,
+  bookingAid: process.env.BOOKING_AID || '',
   defaultCurrency: process.env.DEFAULT_CURRENCY || 'EUR',
   calendarCacheTtl: Number(process.env.CALENDAR_CACHE_TTL) || 21600,
   destinationsCacheTtl: Number(process.env.DESTINATIONS_CACHE_TTL) || 43200,

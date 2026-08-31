@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { config } from '../config.js';
 import { cacheGet, cacheSet } from '../cache.js';
-import { fetchMonthMatrix } from '../travelpayoutsClient.js';
+import { fetchMonthMatrix, fetchCityDirections } from '../travelpayoutsClient.js';
+import { getCitiesByCode } from '../cityLookup.js';
 
 const router = Router();
 
@@ -10,6 +11,34 @@ const MONTH_RE = /^\d{4}-\d{2}$/;
 
 function daysInMonth(year, month) {
   return new Date(year, month, 0).getDate();
+}
+
+async function buildDestinationsByDate(originCode, month, currency) {
+  const destinationsByDate = new Map();
+  try {
+    const raw = await fetchCityDirections({ origin: originCode, currency });
+    const cities = await getCitiesByCode();
+
+    for (const [code, info] of Object.entries(raw)) {
+      if (!info.departure_at || typeof info.price !== 'number') continue;
+      const date = info.departure_at.slice(0, 10);
+      if (!date.startsWith(month)) continue;
+
+      const existing = destinationsByDate.get(date);
+      if (existing && existing.price <= info.price) continue;
+
+      const meta = cities.get(code);
+      destinationsByDate.set(date, {
+        code,
+        cityName: meta ? meta.city : code,
+        flag: meta ? meta.flag : '🌍',
+        price: info.price,
+      });
+    }
+  } catch (err) {
+    console.error('Aviso: no se pudieron cargar destinos baratos para superponer en el calendario:', err.message);
+  }
+  return destinationsByDate;
 }
 
 router.get('/', async (req, res) => {
@@ -40,12 +69,11 @@ router.get('/', async (req, res) => {
 
   try {
     const [year, monthNum] = month.split('-').map(Number);
-    const rawEntries = await fetchMonthMatrix({
-      origin: originCode,
-      destination: destinationCode,
-      month: `${month}-01`,
-      currency,
-    });
+
+    const [rawEntries, destinationsByDate] = await Promise.all([
+      fetchMonthMatrix({ origin: originCode, destination: destinationCode, month: `${month}-01`, currency }),
+      destinationCode ? Promise.resolve(new Map()) : buildDestinationsByDate(originCode, month, currency),
+    ]);
 
     const priceByDate = new Map();
     for (const entry of rawEntries) {
@@ -59,7 +87,8 @@ router.get('/', async (req, res) => {
     for (let day = 1; day <= totalDays; day += 1) {
       const date = `${month}-${String(day).padStart(2, '0')}`;
       const price = priceByDate.get(date);
-      days.push({ date, price: price ?? null, found: price !== undefined });
+      const topDestination = destinationsByDate.get(date) || null;
+      days.push({ date, price: price ?? null, found: price !== undefined, topDestination });
     }
 
     const payload = { origin: originCode, destination: destinationCode || null, month, currency, days };

@@ -1,5 +1,5 @@
 import { getCheapestDestinations, getSearchLink } from './api.js';
-import { renderNav, renderFooter, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError } from './common.js';
+import { renderNav, renderFooter, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError, renderAltLinks } from './common.js';
 
 renderNav('/explorer.html');
 renderFooter();
@@ -10,6 +10,7 @@ const form = document.getElementById('explorer-form');
 const originInput = document.getElementById('origin');
 const status = document.getElementById('explorer-status');
 const results = document.getElementById('explorer-results');
+const altLinks = document.getElementById('alt-links');
 
 function toDateOnly(isoLike) {
   return isoLike ? isoLike.slice(0, 10) : undefined;
@@ -17,17 +18,17 @@ function toDateOnly(isoLike) {
 
 async function openBookingLink(destination) {
   const origin = extractIataCode(originInput.value);
+  const departDate = toDateOnly(destination.departureAt);
+  const returnDate = toDateOnly(destination.returnAt);
+
   try {
-    const { url } = await getSearchLink({
-      origin,
-      destination: destination.destination,
-      departDate: toDateOnly(destination.departureAt),
-      returnDate: toDateOnly(destination.returnAt),
-    });
+    const { url } = await getSearchLink({ origin, destination: destination.destination, departDate, returnDate });
     window.open(url, '_blank', 'noopener');
   } catch (err) {
     alert(`No se pudo generar el enlace de reserva: ${err.message}`);
   }
+
+  renderAltLinks(altLinks, { origin, destination: destination.destination, departDate, returnDate, cityName: destination.cityName });
 }
 
 function renderResults(data) {
@@ -43,8 +44,8 @@ function renderResults(data) {
     card.className = 'dest-card bg-white rounded-2xl shadow-sm border border-slate-100 p-4 cursor-pointer';
     card.innerHTML = `
       <div class="flex items-center gap-3 mb-3">
-        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br ${accent} text-white font-bold text-sm shrink-0">
-          ${dest.destination.slice(0, 2)}
+        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br ${accent} text-lg shrink-0">
+          ${dest.flag || '🌍'}
         </span>
         <div class="min-w-0">
           <h3 class="font-bold text-slate-800 truncate">${dest.cityName}</h3>

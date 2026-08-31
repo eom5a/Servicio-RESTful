@@ -1,5 +1,5 @@
 import { getCalendar, getSearchLink } from './api.js';
-import { renderNav, renderFooter, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError } from './common.js';
+import { renderNav, renderFooter, loadCities, populateDatalist, getSavedOrigin, saveOrigin, extractIataCode, showError, renderAltLinks } from './common.js';
 
 renderNav('/index.html');
 renderFooter();
@@ -13,6 +13,7 @@ const status = document.getElementById('calendar-status');
 const monthLabel = document.getElementById('month-label');
 const prevBtn = document.getElementById('prev-month');
 const nextBtn = document.getElementById('next-month');
+const altLinks = document.getElementById('alt-links');
 
 const MONTH_NAMES = [
   'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
@@ -39,15 +40,20 @@ function priceToColor(price, min, max) {
   return `hsl(${hue}, 70%, 85%)`;
 }
 
-async function openBookingLink(date) {
+async function openBookingLink(day) {
   const origin = extractIataCode(originInput.value);
-  const destination = destinationInput.value ? extractIataCode(destinationInput.value) : undefined;
+  const fixedDestination = destinationInput.value ? extractIataCode(destinationInput.value) : undefined;
+  const destination = fixedDestination || day.topDestination?.code;
+  const cityName = day.topDestination?.cityName;
+
   try {
-    const { url } = await getSearchLink({ origin, destination, departDate: date });
+    const { url } = await getSearchLink({ origin, destination, departDate: day.date });
     window.open(url, '_blank', 'noopener');
   } catch (err) {
     alert(`No se pudo generar el enlace de reserva: ${err.message}`);
   }
+
+  renderAltLinks(altLinks, { origin, destination, departDate: day.date, cityName });
 }
 
 function renderGrid(data) {
@@ -78,11 +84,15 @@ function renderGrid(data) {
     if (day.found) {
       cell.className = 'day-cell rounded-xl p-2 sm:p-3 cursor-pointer text-center border border-black/5 shadow-sm';
       cell.style.backgroundColor = priceToColor(day.price, min, max);
+      const destinationLine = day.topDestination
+        ? `<div class="text-[10px] sm:text-xs font-bold text-slate-700 mt-0.5 truncate">${day.topDestination.flag} ${day.topDestination.cityName}</div>`
+        : '';
       cell.innerHTML = `
         <div class="text-sm font-bold text-slate-800">${dayNum}</div>
         <div class="text-xs sm:text-sm font-semibold text-slate-700">${Math.round(day.price)} ${data.currency}</div>
+        ${destinationLine}
       `;
-      cell.addEventListener('click', () => openBookingLink(day.date));
+      cell.addEventListener('click', () => openBookingLink(day));
     } else {
       cell.className = 'day-cell day-cell--unavailable rounded-xl p-2 sm:p-3 text-center bg-slate-100 text-slate-300';
       cell.innerHTML = `<div class="text-sm">${dayNum}</div><div class="text-xs">—</div>`;
