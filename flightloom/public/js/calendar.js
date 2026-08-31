@@ -14,6 +14,7 @@ const monthLabel = document.getElementById('month-label');
 const prevBtn = document.getElementById('prev-month');
 const nextBtn = document.getElementById('next-month');
 const altLinks = document.getElementById('alt-links');
+const topOffers = document.getElementById('top-offers');
 
 const MONTH_NAMES = [
   'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
@@ -56,6 +57,41 @@ async function openBookingLink(day) {
   renderAltLinks(altLinks, { origin, destination, departDate: day.date, cityName });
 }
 
+function renderTopOffers(data) {
+  if (!data.topOffers?.length) {
+    topOffers.innerHTML = '';
+    return;
+  }
+
+  const [year, month] = data.month.split('-').map(Number);
+  topOffers.innerHTML = `
+    <h3 class="text-sm font-bold text-slate-500 mb-2 text-center sm:text-left">🔥 Mejores ofertas de ${MONTH_NAMES[month - 1]}</h3>
+    <div class="flex gap-2 overflow-x-auto pb-1">
+      ${data.topOffers
+        .map(
+          (offer, i) => `
+        <button type="button" data-index="${i}"
+                class="shrink-0 flex items-center gap-2 bg-white border border-slate-200 rounded-full pl-2 pr-3 py-1.5 shadow-sm hover:shadow-md hover:border-sky-300 transition-all">
+          <span class="text-lg">${offer.flag}</span>
+          <span class="text-sm font-semibold text-slate-700 whitespace-nowrap">${offer.cityName}</span>
+          <span class="text-sm font-extrabold text-sky-600 whitespace-nowrap">${Math.round(offer.price)} ${data.currency}</span>
+        </button>`
+        )
+        .join('')}
+    </div>
+  `;
+
+  topOffers.querySelectorAll('button[data-index]').forEach((btn) => {
+    const offer = data.topOffers[Number(btn.dataset.index)];
+    btn.addEventListener('click', () =>
+      openBookingLink({
+        date: offer.date,
+        topDestination: { code: offer.code, cityName: offer.cityName, flag: offer.flag },
+      })
+    );
+  });
+}
+
 function renderGrid(data) {
   const foundDays = data.days.filter((d) => d.found);
   const min = foundDays.length ? Math.min(...foundDays.map((d) => d.price)) : null;
@@ -85,7 +121,7 @@ function renderGrid(data) {
       cell.className = 'day-cell rounded-xl p-2 sm:p-3 cursor-pointer text-center border border-black/5 shadow-sm';
       cell.style.backgroundColor = priceToColor(day.price, min, max);
       const destinationLine = day.topDestination
-        ? `<div class="text-[10px] sm:text-xs font-bold text-slate-700 mt-0.5 truncate">${day.topDestination.flag} ${day.topDestination.cityName}</div>`
+        ? `<div class="text-[10px] sm:text-xs font-bold text-slate-700 mt-0.5 whitespace-nowrap" title="${day.topDestination.cityName}">${day.topDestination.flag} ${day.topDestination.code}</div>`
         : '';
       cell.innerHTML = `
         <div class="text-sm font-bold text-slate-800">${dayNum}</div>
@@ -116,11 +152,13 @@ async function loadCalendar() {
 
   status.textContent = 'Cargando precios…';
   grid.innerHTML = '';
+  topOffers.innerHTML = '';
   prevBtn.disabled = true;
   nextBtn.disabled = true;
 
   try {
     const data = await getCalendar({ origin, destination, month });
+    renderTopOffers(data);
     renderGrid(data);
     status.textContent = '';
     prevBtn.disabled = false;
