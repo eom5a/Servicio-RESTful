@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { Flame, LineChart, Settings } from "lucide-react";
+import { redirect } from "next/navigation";
+import { Flame, LineChart, LogOut, Settings } from "lucide-react";
+
+import { createClient } from "@/lib/supabase/server";
 
 const NAV = [
   { href: "/app", label: "Hoy", icon: Flame },
@@ -7,10 +10,16 @@ const NAV = [
   { href: "/app/settings", label: "Ajustes", icon: Settings },
 ] as const;
 
-// Shared chrome for the authenticated area. Auth gating (redirect to
-// /login when there's no session) is wired up in Phase 1 alongside
-// Supabase Auth itself.
-export default function AppLayout({ children }: LayoutProps<"/app">) {
+export default async function AppLayout({ children }: LayoutProps<"/app">) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
   return (
     <div className="flex min-h-full flex-1 flex-col">
       <header className="border-b border-border">
@@ -29,6 +38,15 @@ export default function AppLayout({ children }: LayoutProps<"/app">) {
                 {label}
               </Link>
             ))}
+            <form action="/auth/signout" method="post">
+              <button
+                type="submit"
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              >
+                <LogOut className="size-4" />
+                Salir
+              </button>
+            </form>
           </nav>
         </div>
       </header>
