@@ -41,7 +41,8 @@ Si despliegas el sitio antes de tener el token/marker de Travelpayouts (por ejem
 
 ## Estructura
 
-- `server/` — backend Express: proxy con caché delante de la API de Travelpayouts y construcción de enlaces de afiliado.
+- `server/app.js` — la app de Express (rutas, caché, enlaces de afiliado); `server/index.js` solo la arranca con `.listen()` para desarrollo local o Render.
+- `api/index.js` — reexporta esa misma app como función serverless para Vercel.
 - `public/` — frontend estático (HTML + JS vanilla + Tailwind CSS). No hace falta ningún paso de build para servir la web: `public/css/tailwind.css` ya viene generado y committeado.
 - `test/manual-curl.md` — comandos de verificación manual de la API.
 
@@ -51,15 +52,19 @@ Si modificas las clases de Tailwind en el HTML/JS y quieres regenerar el CSS:
 npm run build:css
 ```
 
-## Despliegue (Render)
+## Despliegue (Vercel — recomendado)
 
-El repositorio incluye `render.yaml` en la raíz para desplegar como Blueprint en [Render](https://render.com/):
+El backend está preparado como función serverless (`api/index.js` reexporta la app de Express de `server/app.js`) para que el frontend se sirva por la CDN de Vercel (siempre al instante, sin "dormirse") y solo las rutas `/api/*` pasen por la función. La configuración está en `vercel.json`.
 
-1. Crea una cuenta en Render y conecta este repositorio de GitHub.
-2. "New +" → "Blueprint" → selecciona el repo; Render detectará `render.yaml` automáticamente (usa la carpeta `flightloom/` como raíz del servicio).
-3. En el panel del servicio, rellena las variables de entorno marcadas como secretas: `TRAVELPAYOUTS_TOKEN` y `TRAVELPAYOUTS_MARKER`.
-4. Una vez desplegado, en "Settings" → "Custom Domain" añade `flightloom.es` y sigue las instrucciones de Render para apuntar el DNS del dominio (registro CNAME/A según indique) desde tu proveedor de dominios.
-5. Con el dominio apuntando y el sitio en producción, ya puedes verificar la propiedad del sitio en Impact.com (el meta tag ya está incluido en `public/index.html`).
+1. Crea una cuenta en [vercel.com](https://vercel.com/) y conecta este repositorio de GitHub (Root Directory: `flightloom`).
+2. Vercel detecta `vercel.json` automáticamente (build command y carpeta de salida ya configurados).
+3. En "Settings" → "Environment Variables" añade `TRAVELPAYOUTS_TOKEN`, `TRAVELPAYOUTS_MARKER` y opcionalmente `BOOKING_AID`.
+4. En "Settings" → "Domains" añade `flightloom.es` y `www.flightloom.es`; Vercel te dará los registros DNS exactos (normalmente un A para el dominio raíz y un CNAME `cname.vercel-dns.com` para `www`) que hay que poner en el proveedor del dominio.
+5. Con el dominio apuntando, verifica la propiedad del sitio en Impact.com (el meta tag ya está en `public/index.html`) y confirma la instalación en Travelpayouts (script en `public/index.html`).
+
+## Despliegue (Render — alternativa)
+
+También se puede desplegar como servidor Node normal con `render.yaml` (Blueprint) en [Render](https://render.com/), root directory `flightloom`. Aviso: en el plan gratuito de Render el servicio "duerme" tras un rato sin visitas y tarda 30-60s en la primera petición al despertar — por eso se recomienda Vercel en su lugar, o el plan de pago de Render si se prefiere quedarse ahí.
 
 ## Alcance de esta primera versión
 

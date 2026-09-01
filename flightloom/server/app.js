@@ -1,0 +1,20 @@
+import express from 'express';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+import calendarRoute from './routes/calendar.js';
+import destinationsRoute from './routes/destinations.js';
+import searchLinkRoute from './routes/searchLink.js';
+import altLinksRoute from './routes/altLinks.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const publicDir = join(__dirname, '..', 'public');
+
+const app = express();
+
+app.use('/api/calendar', calendarRoute);
+app.use('/api/cheapest-destinations', destinationsRoute);
+app.use('/api/search-link', searchLinkRoute);
+app.use('/api', altLinksRoute);
+app.use(express.static(publicDir));
+
+export default app;
