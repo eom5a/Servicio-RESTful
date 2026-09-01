@@ -1,0 +1,23 @@
+{
+  "name": "flightloom",
+  "version": "1.0.0",
+  "description": "Flightloom: calendario de vuelos baratos con fechas flexibles, explorador de destinos y buscador tradicional, con enlaces de reserva de afiliado (Travelpayouts/Aviasales).",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "build:css": "tailwindcss -i ./public/css/input.css -o ./public/css/tailwind.css --minify"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

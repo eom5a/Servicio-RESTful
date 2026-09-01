@@ -1,0 +1,7 @@
+{
+  "buildCommand": "npm run build:css",
+  "outputDirectory": "public",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index" }
+  ]
+}

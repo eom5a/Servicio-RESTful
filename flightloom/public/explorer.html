@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HWNT9R4SMM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-HWNT9R4SMM');
+  </script>
+  <title>Flightloom — Explorar destinos baratos</title>
+  <meta name="description" content="Descubre a qué destinos hay vuelos baratos ahora mismo desde tu ciudad, sin elegir destino de antemano. Explora ofertas de vuelo actualizadas con Flightloom." />
+  <link rel="canonical" href="https://www.flightloom.es/explorer.html" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Flightloom" />
+  <meta property="og:locale" content="es_ES" />
+  <meta property="og:url" content="https://www.flightloom.es/explorer.html" />
+  <meta property="og:title" content="Flightloom — Explorar destinos baratos" />
+  <meta property="og:description" content="Descubre a qué destinos hay vuelos baratos ahora mismo desde tu ciudad, sin elegir destino de antemano." />
+  <meta property="og:image" content="https://www.flightloom.es/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Flightloom — Explorar destinos baratos" />
+  <meta name="twitter:description" content="Descubre a qué destinos hay vuelos baratos ahora mismo desde tu ciudad, sin elegir destino de antemano." />
+  <meta name="twitter:image" content="https://www.flightloom.es/og-image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/tailwind.css" />
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <header id="app-header" class="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-20"></header>
+
+  <section class="relative overflow-hidden bg-gradient-to-br from-fuchsia-600 via-violet-500 to-sky-500 text-white">
+    <svg class="absolute inset-0 w-full h-full opacity-20 pointer-events-none" preserveAspectRatio="none" viewBox="0 0 800 300" fill="none">
+      <path d="M-20 60 C 220 220, 440 20, 820 220" stroke="white" stroke-width="2" stroke-dasharray="7 11" />
+    </svg>
+    <div class="max-w-5xl mx-auto px-4 pt-12 pb-20 sm:pt-16 sm:pb-24 text-center relative">
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">
+        ¿A dónde puedo volar barato?
+      </h1>
+      <p class="text-white/90 text-base sm:text-lg max-w-2xl mx-auto">
+        Fija tu origen y descubre los destinos más baratos encontrados, sin elegir destino de antemano.
+      </p>
+    </div>
+  </section>
+
+  <main class="max-w-5xl mx-auto px-4 -mt-12 sm:-mt-14 pb-10 relative z-10">
+    <form id="explorer-form" class="bg-white rounded-2xl shadow-xl shadow-slate-900/10 p-5 mb-8 grid gap-4 sm:grid-cols-3">
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-medium text-slate-600 mb-1" for="origin">Origen</label>
+        <div class="relative">
+          <input id="origin" autocomplete="off" required placeholder="MAD"
+                 class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+        </div>
+      </div>
+      <div class="flex items-end">
+        <button type="submit"
+                class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold rounded-lg px-4 py-2 transition-colors shadow-sm">
+          Explorar destinos
+        </button>
+      </div>
+    </form>
+
+    <div id="explorer-status" class="text-sm text-slate-500 mb-3 text-center"></div>
+    <div id="explorer-results" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+    <div id="alt-links" class="mt-5"></div>
+  </main>
+
+  <footer id="app-footer"></footer>
+
+  <script type="module" src="/js/explorer.js"></script>
+</body>
+</html>
