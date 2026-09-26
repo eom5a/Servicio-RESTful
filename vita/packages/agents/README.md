@@ -1,8 +1,22 @@
 # @vita/agents
 
-Placeholder de la Fase 0. Aquí vivirán, en la Fase 1, las definiciones de
-los 5 agentes (Director, Nutrición, Métricas, Deporte, Doctor) construidos
-con el **Claude Agent SDK**: prompts, herramientas (lectura/escritura en
-`@vita/db`, búsqueda web) y la orquestación entre ellos.
+Los 5 agentes de VITA (Director, Nutrición, Métricas, Deporte, Doctor)
+construidos con `@anthropic-ai/claude-agent-sdk`:
 
-Ver `docs/fase-0.md` para el estado actual del proyecto.
+- `src/prompts.ts` — system prompt de cada agente (responsabilidades y,
+  en el caso del Doctor, sus límites clínicos obligatorios).
+- `src/tools.ts` — herramientas MCP propias (`vita`) para leer el estado
+  real del usuario (perfil, fase, pesajes, actividad) y escribir en la
+  memoria compartida (`agent_insights`, `agent_decisions`).
+- `src/agents.ts` — las `AgentDefinition` de los 4 subagentes de dominio y
+  `runDirector()`, que lanza una sesión del Director (con acceso a los
+  subagentes vía la herramienta Agent) y devuelve el resultado final.
+
+Todavía no está conectado a jobs reales del worker (eso llega en fases
+posteriores, cuando haya datos reales que procesar); en la Fase 1 se ha
+usado para que cada agente investigue su dominio y escriba
+`knowledge/<agente>/`.
+
+Requiere `ANTHROPIC_API_KEY` (o sesión de Claude Code autenticada) en el
+entorno donde se ejecute, y el modelo de cada agente es configurable por
+variable de entorno (ver `.env.example`).
