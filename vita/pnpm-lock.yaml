@@ -18,6 +18,9 @@ importers:
       '@vita/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@vita/integrations':
+        specifier: workspace:*
+        version: link:../../packages/integrations
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
@@ -125,7 +128,21 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
 
-  packages/integrations: {}
+  packages/integrations:
+    dependencies:
+      '@vita/db':
+        specifier: workspace:*
+        version: link:../db
+      drizzle-orm:
+        specifier: ^0.45.3
+        version: 0.45.3(pg@8.23.0)(postgres@3.4.9)
+    devDependencies:
+      '@types/node':
+        specifier: ^26.6.3
+        version: 26.6.3
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
 
 packages:
 
