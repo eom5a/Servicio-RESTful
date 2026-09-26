@@ -65,6 +65,10 @@ export default async function HoyPage() {
             VITA ·{" "}
             <Link href="/fitdays" className="underline">
               Importar Fitdays
+            </Link>{" "}
+            ·{" "}
+            <Link href="/suplementos" className="underline">
+              Suplementos
             </Link>
           </p>
         </div>
