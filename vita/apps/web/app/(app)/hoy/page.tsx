@@ -1,5 +1,6 @@
 import { eq, sql } from "drizzle-orm";
 import { db, meals, mealItems, foods } from "@vita/db";
+import Link from "next/link";
 import { LogoutButton } from "./logout-button";
 import { MealLogger } from "./meal-logger";
 
@@ -60,7 +61,12 @@ export default async function HoyPage() {
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold capitalize">{today}</h1>
-          <p className="text-sm text-neutral-400">VITA · Fase 0</p>
+          <p className="text-sm text-neutral-400">
+            VITA ·{" "}
+            <Link href="/fitdays" className="underline">
+              Importar Fitdays
+            </Link>
+          </p>
         </div>
         <LogoutButton />
       </header>
