@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790447088239,
+      "tag": "0000_curvy_la_nuit",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790447176270,
+      "tag": "0001_timescale_hypertables",
+      "breakpoints": true
+    }
+  ]
+}
