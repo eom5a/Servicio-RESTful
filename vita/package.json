@@ -13,7 +13,8 @@
     "typecheck": "pnpm --filter @vita/db build && pnpm --filter @vita/integrations build && pnpm -r typecheck",
     "db:generate": "pnpm --filter @vita/db generate",
     "db:migrate": "pnpm --filter @vita/db migrate",
-    "hash-password": "node scripts/hash-password.mjs"
+    "hash-password": "node scripts/hash-password.mjs",
+    "postinstall": "pnpm --filter @vita/db build && pnpm --filter @vita/integrations build"
   },
   "devDependencies": {
     "bcryptjs": "^3.0.3"

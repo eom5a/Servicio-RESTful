@@ -1,3 +1,0 @@
-{
-  "buildCommand": "pnpm --filter @vita/db build && pnpm --filter @vita/integrations build && pnpm build"
-}
