@@ -60,6 +60,13 @@ los haces tú, y al final solo necesito dos cosas tuyas.
   → `createWebhookSubscription`). Se puede hacer con un script puntual
   una vez el dominio esté desplegado.
 
+## Estado actual
+
+- Proyecto Vercel `servicio-res-tful-owaz`, dominio de producción
+  `servicio-res-tful-owaz.vercel.app`, rama de producción
+  `claude/vita-health-agents-cuojkc`, Root Directory `vita/apps/web`.
+- Timescale Cloud: migraciones aplicadas (17 tablas + 2 hypertables).
+
 ## Qué cambia respecto al plan original (`docs/fase-0.md`)
 
 - Los datos de salud dejan de estar solo en la red local (Tailscale) y
