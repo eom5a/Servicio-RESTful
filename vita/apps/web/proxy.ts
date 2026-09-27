@@ -16,9 +16,11 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Protege todo excepto: /login, /api/auth/*, /api/health, assets
-     * estáticos de Next y el manifiesto/iconos de la PWA (Fase 4).
+     * Protege todo excepto: /login, /api/auth/*, /api/health, el webhook
+     * de Strava (lo llaman los servidores de Strava, sin cookie de
+     * sesión — nunca puede quedar detrás del login), assets estáticos de
+     * Next y el manifiesto/iconos de la PWA (Fase 4).
      */
-    "/((?!login|api/auth|api/health|_next/static|_next/image|favicon.ico).*)",
+    "/((?!login|api/auth|api/health|api/integrations/strava/webhook|_next/static|_next/image|favicon.ico).*)",
   ],
 };

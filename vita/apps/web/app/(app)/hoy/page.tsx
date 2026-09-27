@@ -69,6 +69,10 @@ export default async function HoyPage() {
             ·{" "}
             <Link href="/suplementos" className="underline">
               Suplementos
+            </Link>{" "}
+            ·{" "}
+            <Link href="/integraciones" className="underline">
+              Integraciones
             </Link>
           </p>
         </div>
